@@ -1,23 +1,24 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import coco from "./assets/coco.png";
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios'
 
 export default function Register() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const [name,setName] = useState();
+  const [email,setEmail] = useState();
+  const [password,setPassword] = useState();
+  const navigate = useNavigate()
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Register Data:", formData);
-    alert("🌴 Welcome to CocoMart! Your account has been created.");
+    axios.post('http://localhost:3001/register',{name,email,password})
+    .then(result => console.log(result),
+    alert("🌴 Welcome to CocoMart! Your account has been created."))
+    navigate('/login')
+    .catch(err => console.log(err))
   };
 
   return (
@@ -64,7 +65,7 @@ export default function Register() {
               <input
                 type="text"
                 name="name"
-                onChange={handleChange}
+                onChange={(e) => setName(e.target.value)}
                 required
                 className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
                 placeholder="John Coconut"
@@ -82,7 +83,7 @@ export default function Register() {
               <input
                 type="email"
                 name="email"
-                onChange={handleChange}
+                onChange={(e) => setEmail(e.target.value)}
                 required
                 className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
                 placeholder="coco@example.com"
@@ -100,30 +101,14 @@ export default function Register() {
               <input
                 type="password"
                 name="password"
-                onChange={handleChange}
+                onChange={(e) => setPassword(e.target.value)}
                 required
                 className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
                 placeholder="••••••••"
               />
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-            >
-              <label className="block text-sm font-medium text-gray-600">
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                name="confirmPassword"
-                onChange={handleChange}
-                required
-                className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
-                placeholder="••••••••"
-              />
-            </motion.div>
+            
 
             <motion.button
               whileHover={{ scale: 1.05 }}
