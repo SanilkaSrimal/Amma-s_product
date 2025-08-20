@@ -1,21 +1,26 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Coco from "./assets/coco.png";
+import axios from 'axios';
+import {useNavigate} from 'react-router-dom';
 
 export default function Login() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Login Data:", formData);
-    alert("🌴 Welcome back to CocoMart!");
+    axios.post('http://localhost:3001/login', { email, password })
+    .then(result => {
+        console.log(result,alert("🌴 Welcome back to CocoMart!"));
+        if (result.data === "Success") {
+          navigate('/home');
+        }
+      })
+      .catch(err => console.log(err));
+    
   };
 
   return (
@@ -62,7 +67,7 @@ export default function Login() {
               <input
                 type="email"
                 name="email"
-                onChange={handleChange}
+                onChange={(e) => setEmail(e.target.value)}
                 required
                 className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
                 placeholder="coco@example.com"
@@ -80,7 +85,7 @@ export default function Login() {
               <input
                 type="password"
                 name="password"
-                onChange={handleChange}
+                onChange={(e) => setPassword(e.target.value)}
                 required
                 className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
                 placeholder="••••••••"
